@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/issengi/goboot/app/config"
-	"github.com/issengi/goboot/app/route"
+	"github.com/issengi/goboot/main/config"
+	"github.com/issengi/goboot/main/route"
 )
 
 func main() {
