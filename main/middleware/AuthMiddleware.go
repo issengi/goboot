@@ -2,8 +2,8 @@ package middleware
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/issengi/goboot/app/config"
-	"github.com/issengi/goboot/app/services"
+	"github.com/issengi/goboot/main/config"
+	"github.com/issengi/goboot/main/services"
 	"net/http"
 	"strings"
 )

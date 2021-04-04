@@ -18,6 +18,7 @@ var (
 )
 
 type config struct {
+	AppName				string
 	AppKey				string
 	// database config
 	DbHost				string
@@ -30,7 +31,7 @@ type config struct {
 	// port server address
 	PortServer			string
 
-	// mode app LOCAL, DEV, PRODUCTION
+	// mode main LOCAL, DEV, PRODUCTION
 	AppEnv				string
 
 	// CORS config
@@ -70,6 +71,13 @@ func init() {
 		appKey = os.Getenv("APP_KEY")
 	}
 	Config.Manipulate("AppKey", appKey)
+
+	appName := "local_app"
+	if os.Getenv("APP_NAME") != "" {
+		appName = os.Getenv("APP_NAME")
+	}
+	Config.Manipulate("AppName", appName)
+
 	listCORSAllowOrigin := strings.Split(os.Getenv("CORS_ALLOW_ORIGINS"),",")
 	if os.Getenv("CORS_ALLOW_ORIGINS") != ""{
 		fmt.Println(len(listCORSAllowOrigin))

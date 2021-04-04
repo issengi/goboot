@@ -27,3 +27,4 @@ func JWTGetClaimsFromToken(token *jwt.Token) (jwt.MapClaims, bool) {
 	claims, ok := token.Claims.(jwt.MapClaims)
 	return claims, ok
 }
+
