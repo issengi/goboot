@@ -1,5 +1,5 @@
 .idea
 vendor
-go.sum
+go.*
 .env
 tmp
