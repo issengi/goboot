@@ -2,8 +2,8 @@ package middleware
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/issengi/goboot/main/config"
-	"github.com/issengi/goboot/main/services"
+	"gitlab.com/NeoReids/backend-tryonline-golang/app/config"
+	"gitlab.com/NeoReids/backend-tryonline-golang/app/services"
 	"net/http"
 	"strings"
 )

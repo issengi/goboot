@@ -5,17 +5,17 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
-	"github.com/issengi/goboot/main/actions"
-	"github.com/issengi/goboot/main/config"
-	"github.com/issengi/goboot/main/middleware"
-	"github.com/issengi/goboot/main/services"
+	"gitlab.com/NeoReids/backend-tryonline-golang/app/actions"
+	"gitlab.com/NeoReids/backend-tryonline-golang/app/config"
+	"gitlab.com/NeoReids/backend-tryonline-golang/app/middleware"
+	"gitlab.com/NeoReids/backend-tryonline-golang/app/services"
 )
 
 func init() {
 	binding.Validator = new(services.GinDefaultValidator)
 }
 
-func InitRoute(){
+func InitRoute() {
 	baseConfig := config.Config
 	if !baseConfig.IsDev() {
 		gin.SetMode(gin.ReleaseMode)

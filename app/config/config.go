@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	DEV = "dev"
+	DEV   = "dev"
 	LOCAL = "local"
 )
 
@@ -18,43 +18,43 @@ var (
 )
 
 type config struct {
-	AppName				string
-	AppKey				string
+	AppName string
+	AppKey  string
 	// database config
-	DbHost				string
-	DbUser 				string
-	DbPassword 			string
-	DbName				string
-	SSLEnable			string
-	DbPort				string
+	DbHost     string
+	DbUser     string
+	DbPassword string
+	DbName     string
+	SSLEnable  string
+	DbPort     string
 
 	// port server address
-	PortServer			string
+	PortServer string
 
-	// mode main LOCAL, DEV, PRODUCTION
-	AppEnv				string
+	// mode app LOCAL, DEV, PRODUCTION
+	AppEnv string
 
 	// CORS config
-	CORSAllowOrigins	[]string
-	CORSMethods			[]string
-	CORSHeaders			[]string
+	CORSAllowOrigins []string
+	CORSMethods      []string
+	CORSHeaders      []string
 }
 
 func init() {
 	// load .env file with error return
 	e := godotenv.Load()
-	if e != nil{
+	if e != nil {
 		panic(".env file not found.")
 	}
 	Config = &config{}
 	// list map string for env to struct key format {ENV_KEY: STRUCT_KEY}
 	listEnv := map[string]string{
-		"DB_HOST": "DbHost",
-		"DB_NAME": "DbName",
-		"DB_USER": "DbUser",
+		"DB_HOST":     "DbHost",
+		"DB_NAME":     "DbName",
+		"DB_USER":     "DbUser",
 		"DB_PASSWORD": "DbPassword",
-		"DB_PORT": "DbPort",
-		"SSL_DB": "SSLEnable",
+		"DB_PORT":     "DbPort",
+		"SSL_DB":      "SSLEnable",
 		"PORT_SERVER": "PortServer",
 	}
 	for key, v := range listEnv {
@@ -78,20 +78,20 @@ func init() {
 	}
 	Config.Manipulate("AppName", appName)
 
-	listCORSAllowOrigin := strings.Split(os.Getenv("CORS_ALLOW_ORIGINS"),",")
-	if os.Getenv("CORS_ALLOW_ORIGINS") != ""{
+	listCORSAllowOrigin := strings.Split(os.Getenv("CORS_ALLOW_ORIGINS"), ",")
+	if os.Getenv("CORS_ALLOW_ORIGINS") != "" {
 		fmt.Println(len(listCORSAllowOrigin))
 		Config.CORSAllowOrigins = listCORSAllowOrigin
 	}
 	if os.Getenv("CORS_METHODS") != "" {
 		Config.CORSMethods = strings.Split(os.Getenv("CORS_METHODS"), ",")
 	}
-	if os.Getenv("CORS_HEADERS") != ""	{
+	if os.Getenv("CORS_HEADERS") != "" {
 		Config.CORSHeaders = strings.Split(os.Getenv("CORS_HEADERS"), ",")
 	}
 }
 
-func (c *config) Manipulate(key string, value string){
+func (c *config) Manipulate(key string, value string) {
 	reflection := reflect.ValueOf(c)
 	fieldname := reflect.Indirect(reflection).FieldByName(key)
 	if fieldname.Kind() != reflect.Invalid {

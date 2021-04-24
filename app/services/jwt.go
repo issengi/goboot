@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-func JWTParserFromGinContext(c *gin.Context, key, algorithm string) (*jwt.Token, error){
+func JWTParserFromGinContext(c *gin.Context, key, algorithm string) (*jwt.Token, error) {
 	authorizationHeader := c.Request.Header.Get("Authorization")
 	tokenString := strings.Replace(authorizationHeader, "Bearer ", "", -1)
 	return JWTParser(tokenString, key, algorithm)
@@ -27,4 +27,3 @@ func JWTGetClaimsFromToken(token *jwt.Token) (jwt.MapClaims, bool) {
 	claims, ok := token.Claims.(jwt.MapClaims)
 	return claims, ok
 }
-

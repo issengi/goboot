@@ -8,7 +8,7 @@ import (
 
 var DBEngine *pg.DB
 
-func init(){
+func init() {
 	DBEngine = pg.Connect(&pg.Options{
 		User:     Config.DbUser,
 		Password: Config.DbPassword,
@@ -16,5 +16,3 @@ func init(){
 		Database: Config.DbName,
 	})
 }
-
-

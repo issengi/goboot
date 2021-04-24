@@ -7,8 +7,8 @@ import (
 )
 
 type GinDefaultValidator struct {
-	once		sync.Once
-	validate	*validator.Validate
+	once     sync.Once
+	validate *validator.Validate
 }
 
 func (g *GinDefaultValidator) ValidateStruct(i interface{}) error {

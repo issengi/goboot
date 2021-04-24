@@ -1,11 +1,7 @@
 package main
 
-import (
-	"github.com/issengi/goboot/main/config"
-	"github.com/issengi/goboot/main/route"
-)
+import "gitlab.com/NeoReids/backend-tryonline-golang/cmd"
 
 func main() {
-	defer config.DBEngine.Close()
-	route.InitRoute()
+	cmd.Execute()
 }
