@@ -2,7 +2,7 @@ package auth
 
 import (
 	"github.com/dgrijalva/jwt-go"
-	"github.com/go-pg/pg/v10"
+	"gorm.io/gorm"
 	"github.com/google/uuid"
 	"gitlab.com/NeoReids/backend-tryonline-golang/app/config"
 	"gitlab.com/NeoReids/backend-tryonline-golang/users/repository"
@@ -16,7 +16,7 @@ type Usecase interface {
 }
 
 type authRepository struct {
-	con *pg.DB
+	con *gorm.DB
 }
 
 func (a authRepository) CreateJWT(email, password string) (string, error) {
@@ -53,6 +53,7 @@ func (a authRepository) CreateJWT(email, password string) (string, error) {
 
 }
 
-func NewAuthRepository(connection *pg.DB) Usecase {
+func NewAuthRepository() Usecase {
+	connection := config.DBEngine
 	return &authRepository{con: connection}
 }

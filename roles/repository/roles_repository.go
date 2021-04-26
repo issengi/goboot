@@ -1,19 +1,22 @@
 package repository
 
 import (
-	"context"
-	"github.com/go-pg/pg/v10"
+	"gorm.io/gorm"
+
 	"gitlab.com/NeoReids/backend-tryonline-golang/app/config"
 	"gitlab.com/NeoReids/backend-tryonline-golang/domain"
 )
 
 type repository struct {
-	connection *pg.DB
+	connection *gorm.DB
 }
 
-func (r repository) Store(ctx context.Context, roles *domain.Roles) (int64, error) {
-	_, err := r.connection.Model(roles).Insert()
-	return roles.Id, err
+func (r repository) Store(roles *domain.Roles) (uint, error) {
+	result := r.connection.Create(roles)
+	if result.Error != nil{
+		return 0, result.Error
+	}
+	return roles.ID, nil
 }
 
 func NewRoleRepository() domain.RolesRepository {

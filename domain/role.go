@@ -1,25 +1,33 @@
 package domain
 
 import (
-	"context"
 	"fmt"
+	"gorm.io/gorm"
 )
 
 type Roles struct {
-	Id   int64
+	gorm.Model
 	Role string
+	Users []*Users `gorm:"many2many:user_role;"`
 }
 
 type UserRole struct {
 	RoleId int64
 	UserId int64
-	Role   *Roles `pg:"rel"`
 }
 
 func (r *Roles) String() string {
-	return fmt.Sprintf("id %d, name %s", r.Id, r.Role)
+	return fmt.Sprintf("id %d, name %s", r.ID, r.Role)
+}
+
+func (r *Roles) GetName() string {
+	return "Roles"
+}
+
+func (r *UserRole) GetName() string{
+	return "User Role"
 }
 
 type RolesRepository interface {
-	Store(ctx context.Context, r *Roles) (int64, error)
+	Store(r *Roles) (uint, error)
 }

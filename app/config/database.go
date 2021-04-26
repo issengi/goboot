@@ -2,17 +2,18 @@ package config
 
 import (
 	"fmt"
-	"github.com/go-pg/pg/v10"
-	//"github.com/go-pg/pg/v10/orm"
+	"gorm.io/gorm"
+	"gorm.io/driver/postgres"
 )
 
-var DBEngine *pg.DB
+var DBEngine *gorm.DB
 
 func init() {
-	DBEngine = pg.Connect(&pg.Options{
-		User:     Config.DbUser,
-		Password: Config.DbPassword,
-		Addr:     fmt.Sprintf("%s:%s", Config.DbHost, Config.DbPort),
-		Database: Config.DbName,
-	})
+	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=Asia/Shanghai",
+		Config.DbHost, Config.DbUser, Config.DbPassword, Config.DbName, Config.DbPort)
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	if err!=nil{
+		panic(err)
+	}
+	DBEngine = db
 }

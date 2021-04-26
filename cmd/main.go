@@ -19,7 +19,10 @@ var migrationCommand = &cobra.Command{
 	Use:   "migrate",
 	Short: "for migrate all schema",
 	Run: func(cmd *cobra.Command, args []string) {
-
+		if err := Migrate(); err!=nil{
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
+		}
 	},
 }
 

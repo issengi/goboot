@@ -3,7 +3,6 @@ package actions
 import (
 	"github.com/gin-gonic/gin"
 	"gitlab.com/NeoReids/backend-tryonline-golang/app/auth"
-	"gitlab.com/NeoReids/backend-tryonline-golang/app/config"
 	"net/http"
 )
 
@@ -19,7 +18,7 @@ func LoginAction(c *gin.Context) {
 		})
 	}
 
-	authRepoository := auth.NewAuthRepository(config.DBEngine)
+	authRepoository := auth.NewAuthRepository()
 	token, errorSignToken := authRepoository.CreateJWT(ruleForm.User, ruleForm.Password)
 	if errorSignToken != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
