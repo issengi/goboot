@@ -1,14 +1,15 @@
 package domain
 
 import (
+	"context"
 	"fmt"
-	"gorm.io/gorm"
 )
 
 type Roles struct {
-	gorm.Model
-	Role string
-	Users []*Users `gorm:"many2many:user_role;"`
+	BaseModel
+	Id		int64
+	Role 	string
+	Users 	[]*Users `gorm:"many2many:user_role;"`
 }
 
 type UserRole struct {
@@ -17,11 +18,11 @@ type UserRole struct {
 }
 
 func (r *Roles) String() string {
-	return fmt.Sprintf("id %d, name %s", r.ID, r.Role)
+	return fmt.Sprintf("id %d, name %s", r.Id, r.Role)
 }
 
 func (r *Roles) GetName() string {
-	return "Roles"
+	return "roles"
 }
 
 func (r *UserRole) GetName() string{
@@ -29,5 +30,6 @@ func (r *UserRole) GetName() string{
 }
 
 type RolesRepository interface {
-	Store(r *Roles) (uint, error)
+	Store(ctx context.Context, r *Roles) (int64, error)
+	BulkInsert(ctx context.Context, roles []Roles) error
 }

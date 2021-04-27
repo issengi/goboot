@@ -1,16 +1,16 @@
 package domain
 
 import (
+	"context"
 	"fmt"
-	"gorm.io/gorm"
 )
 
 type Users struct {
-	gorm.Model
-	Id       int64
-	Email    string `gorm:"unique"`
-	Password string
+	Id       	int64
+	Email    	string `gorm:"unique"`
+	Password 	string
 	Role   	[]*Roles `gorm:"many2many:user_role;"`
+	BaseModel
 }
 
 func (u Users) String() string {
@@ -18,16 +18,21 @@ func (u Users) String() string {
 }
 
 func (u Users) GetName() string{
-	return fmt.Sprintf("Users")
+	return fmt.Sprintf("users")
 }
 
 type UserRepository interface {
 	// First is select the first item where set condition
-	First(conditions string, args ...interface{}) (*Users, error)
+	First(context context.Context, conditions string, args ...interface{}) (*Users, error)
 	// Select is list of user which descending ID
-	Select(conditions string, args ...interface{}) ([]Users, error)
+	Select(context context.Context, conditions string, args ...interface{}) ([]*Users, error)
+	// Count all user match with condition
+	Count(ctx context.Context, condition string, args ...interface{}) (int64, error)
+	// Create new user
+	Create(ctx context.Context, user *Users) (int64, error)
 }
 
 type UserUsecase interface {
-	Login(email, password string) (*Users, error)
+	Login(ctx context.Context, email, password string) (*Users, error)
+	BulkInsert(ctx context.Context, users []Users) error
 }

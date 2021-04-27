@@ -19,7 +19,7 @@ func LoginAction(c *gin.Context) {
 	}
 
 	authRepoository := auth.NewAuthRepository()
-	token, errorSignToken := authRepoository.CreateJWT(ruleForm.User, ruleForm.Password)
+	token, errorSignToken := authRepoository.CreateJWT(c, ruleForm.User, ruleForm.Password)
 	if errorSignToken != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": errorSignToken.Error(),

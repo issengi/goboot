@@ -19,15 +19,21 @@ var migrationCommand = &cobra.Command{
 	Use:   "migrate",
 	Short: "for migrate all schema",
 	Run: func(cmd *cobra.Command, args []string) {
-		if err := Migrate(); err!=nil{
-			fmt.Fprintln(os.Stderr, err)
-			os.Exit(1)
-		}
+		Migrate()
+	},
+}
+
+var seedCommand = &cobra.Command{
+	Use: "seed",
+	Short: "Seed data from default seeder.",
+	Run: func(cmd *cobra.Command, args []string) {
+		Seed()
 	},
 }
 
 func Execute() {
 	rootCommand.AddCommand(migrationCommand)
+	rootCommand.AddCommand(seedCommand)
 	if errorCommand := rootCommand.Execute(); errorCommand != nil {
 		fmt.Fprintln(os.Stderr, errorCommand)
 		os.Exit(1)

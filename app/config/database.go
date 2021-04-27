@@ -1,19 +1,26 @@
 package config
 
 import (
+	"context"
 	"fmt"
-	"gorm.io/gorm"
-	"gorm.io/driver/postgres"
+	"github.com/jackc/pgx/v4"
+	"log"
 )
 
-var DBEngine *gorm.DB
+var DBEngine *DBConnection
+
+type DBConnection struct {
+	Conn *pgx.Conn
+}
 
 func init() {
-	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=Asia/Shanghai",
-		Config.DbHost, Config.DbUser, Config.DbPassword, Config.DbName, Config.DbPort)
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	formatSchema := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=%s", Config.DbUser,
+		Config.DbPassword, Config.DbHost, Config.DbPort, Config.DbName, Config.SSLEnable)
+
+	db, err := pgx.Connect(context.Background(), formatSchema)
 	if err!=nil{
+		log.Printf(formatSchema)
 		panic(err)
 	}
-	DBEngine = db
+	DBEngine = &DBConnection{Conn: db}
 }

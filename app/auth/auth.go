@@ -1,28 +1,26 @@
 package auth
 
 import (
+	"context"
 	"github.com/dgrijalva/jwt-go"
-	"gorm.io/gorm"
 	"github.com/google/uuid"
 	"gitlab.com/NeoReids/backend-tryonline-golang/app/config"
-	"gitlab.com/NeoReids/backend-tryonline-golang/users/repository"
 	"gitlab.com/NeoReids/backend-tryonline-golang/users/usecase"
 	"time"
 )
 
 type Usecase interface {
 	//Login(email, password string) (*domain.Users, error)
-	CreateJWT(email, password string) (string, error)
+	CreateJWT(ctx context.Context, email, password string) (string, error)
 }
 
 type authRepository struct {
-	con *gorm.DB
+	con *config.DBConnection
 }
 
-func (a authRepository) CreateJWT(email, password string) (string, error) {
-	userRepository := repository.NewUserRepository()
-	userUsecase := usecase.NewUserUsecase(userRepository)
-	user, errorFindUser := userUsecase.Login(email, password)
+func (a authRepository) CreateJWT(ctx context.Context, email, password string) (string, error) {
+	userUsecase := usecase.NewUserUsecase()
+	user, errorFindUser := userUsecase.Login(ctx, email, password)
 	if errorFindUser != nil {
 		return "", errorFindUser
 	}
