@@ -3,9 +3,9 @@ package repository
 import (
 	"context"
 	"fmt"
+	"github.com/issengi/goboot/app/config"
+	"github.com/issengi/goboot/domain"
 	"github.com/jackc/pgx/v4"
-	"gitlab.com/NeoReids/backend-tryonline-golang/app/config"
-	"gitlab.com/NeoReids/backend-tryonline-golang/domain"
 )
 
 type userRepository struct {
@@ -15,7 +15,7 @@ type userRepository struct {
 func (u userRepository) Create(ctx context.Context, user *domain.Users) (int64, error) {
 	query := "INSERT INTO users(email, password) VALUES($1,$2) RETURNING id"
 	var lastInserted int64
-	errCreate := u.db.Conn.QueryRow(ctx, query).Scan(&lastInserted)
+	errCreate := u.db.Conn.QueryRow(ctx, query, user.Email, user.Password).Scan(&lastInserted)
 	return lastInserted, errCreate
 }
 

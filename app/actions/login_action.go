@@ -2,7 +2,7 @@ package actions
 
 import (
 	"github.com/gin-gonic/gin"
-	"gitlab.com/NeoReids/backend-tryonline-golang/app/auth"
+	"github.com/issengi/goboot/app/auth"
 	"net/http"
 )
 

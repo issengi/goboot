@@ -1,6 +1,6 @@
 package main
 
-import "gitlab.com/NeoReids/backend-tryonline-golang/cmd"
+import "github.com/issengi/goboot/cmd"
 
 func main() {
 	cmd.Execute()

@@ -1,4 +1,4 @@
-module gitlab.com/NeoReids/backend-tryonline-golang
+module github.com/issengi/goboot
 
 go 1.15
 

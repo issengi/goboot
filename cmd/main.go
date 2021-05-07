@@ -3,7 +3,7 @@ package cmd
 import (
 	"fmt"
 	"github.com/spf13/cobra"
-	"gitlab.com/NeoReids/backend-tryonline-golang/app"
+	"github.com/issengi/goboot/app"
 	"os"
 )
 

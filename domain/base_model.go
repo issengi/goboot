@@ -4,7 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"gitlab.com/NeoReids/backend-tryonline-golang/app/config"
+	"github.com/issengi/goboot/app/config"
 	"time"
 )
 

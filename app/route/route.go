@@ -5,10 +5,10 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
-	"gitlab.com/NeoReids/backend-tryonline-golang/app/actions"
-	"gitlab.com/NeoReids/backend-tryonline-golang/app/config"
-	"gitlab.com/NeoReids/backend-tryonline-golang/app/middleware"
-	"gitlab.com/NeoReids/backend-tryonline-golang/app/services"
+	"github.com/issengi/goboot/app/actions"
+	"github.com/issengi/goboot/app/config"
+	"github.com/issengi/goboot/app/middleware"
+	"github.com/issengi/goboot/app/services"
 )
 
 func init() {

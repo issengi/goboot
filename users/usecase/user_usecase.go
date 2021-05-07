@@ -3,8 +3,8 @@ package usecase
 import (
 	"context"
 	"errors"
-	"gitlab.com/NeoReids/backend-tryonline-golang/domain"
-	"gitlab.com/NeoReids/backend-tryonline-golang/users/repository"
+	"github.com/issengi/goboot/domain"
+	"github.com/issengi/goboot/users/repository"
 	"golang.org/x/crypto/bcrypt"
 )
 

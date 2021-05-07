@@ -4,8 +4,8 @@ import (
 	"context"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/google/uuid"
-	"gitlab.com/NeoReids/backend-tryonline-golang/app/config"
-	"gitlab.com/NeoReids/backend-tryonline-golang/users/usecase"
+	"github.com/issengi/goboot/app/config"
+	"github.com/issengi/goboot/users/usecase"
 	"time"
 )
 

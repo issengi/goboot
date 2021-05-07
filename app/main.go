@@ -2,8 +2,8 @@ package app
 
 import (
 	"context"
-	"gitlab.com/NeoReids/backend-tryonline-golang/app/config"
-	"gitlab.com/NeoReids/backend-tryonline-golang/app/route"
+	"github.com/issengi/goboot/app/config"
+	"github.com/issengi/goboot/app/route"
 )
 
 func InitApp() {

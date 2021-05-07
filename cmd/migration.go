@@ -4,7 +4,7 @@ import (
 	"github.com/golang-migrate/migrate/v4"
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
-	"gitlab.com/NeoReids/backend-tryonline-golang/app/config"
+	"github.com/issengi/goboot/app/config"
 	"log"
 )
 
@@ -17,5 +17,7 @@ func Migrate(){
 		log.Printf(configDb.ConnString())
 		panic(err)
 	}
-	m.Steps(2)
+	if errStep := m.Steps(12); errStep != nil{
+		log.Println(errStep.Error())
+	}
 }

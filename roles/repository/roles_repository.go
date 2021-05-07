@@ -2,8 +2,8 @@ package repository
 
 import (
 	"context"
-	"gitlab.com/NeoReids/backend-tryonline-golang/app/config"
-	"gitlab.com/NeoReids/backend-tryonline-golang/domain"
+	"github.com/issengi/goboot/app/config"
+	"github.com/issengi/goboot/domain"
 )
 
 type repository struct {
@@ -21,12 +21,16 @@ func (r repository) BulkInsert(ctx context.Context, roles []domain.Roles) error 
 }
 
 func (r repository) Store(ctx context.Context, roles *domain.Roles) (int64, error) {
+	var testId int64
 	db := r.connection.Conn
-	errorInsert := db.QueryRow(ctx, `INSERT INTO roles(role) VALUES($1); RETURNING id`, roles.Role).Scan(roles.Id)
-	defer db.Close(ctx)
+	errorInsert := db.
+		QueryRow(ctx, `INSERT INTO roles(role_name) VALUES($1) RETURNING id`, roles.Role).
+		Scan(&testId)
+	//defer db.Close(ctx)
 	if errorInsert != nil{
 		return 0, errorInsert
 	}
+	roles.Id = testId
 	return roles.Id, nil
 }
 

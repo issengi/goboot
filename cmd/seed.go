@@ -2,12 +2,10 @@ package cmd
 
 import (
 	"context"
-	"gitlab.com/NeoReids/backend-tryonline-golang/domain"
-	roleRepository "gitlab.com/NeoReids/backend-tryonline-golang/roles/repository"
-	"gitlab.com/NeoReids/backend-tryonline-golang/users/usecase"
+	"github.com/issengi/goboot/domain"
+	roleRepository "github.com/issengi/goboot/roles/repository"
+	"github.com/issengi/goboot/users/usecase"
 	"golang.org/x/crypto/bcrypt"
-	"log"
-	"os"
 )
 
 func Seed() {
@@ -21,8 +19,7 @@ func Seed() {
 	}
 	errSeedRole := roleRepo.BulkInsert(ctx, roles)
 	if errSeedRole != nil{
-		log.Printf(errSeedRole.Error())
-		os.Exit(1)
+		panic(errSeedRole)
 	}
 	passwordAdmin, _ := bcrypt.GenerateFromPassword([]byte("admin"), bcrypt.DefaultCost)
 	passwordUser, _ := bcrypt.GenerateFromPassword([]byte("user"), bcrypt.DefaultCost)
@@ -33,7 +30,6 @@ func Seed() {
 
 	errSeedUser := userUsecase.BulkInsert(ctx, users)
 	if errSeedUser != nil{
-		log.Printf(errSeedUser.Error())
-		os.Exit(1)
+		panic(errSeedUser)
 	}
 }
