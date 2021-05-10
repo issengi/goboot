@@ -31,5 +31,9 @@ func (r *UserRole) GetName() string{
 
 type RolesRepository interface {
 	Store(ctx context.Context, r *Roles) (int64, error)
-	BulkInsert(ctx context.Context, roles []Roles) error
+	BulkInsert(ctx context.Context, roles []*Roles) error
+}
+
+type UserRoleRepository interface {
+	Store(ctx context.Context, userRoleStruct UserRole) error
 }

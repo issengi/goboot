@@ -9,12 +9,12 @@ import (
 )
 
 func Migrate(){
-	configDb := config.DBEngine.Conn.Config()
+	configDb := config.DBEngine
 	m, err := migrate.New(
 		"file://migrations",
-		configDb.ConnString())
+		configDb.StringConnection)
 	if err!=nil{
-		log.Printf(configDb.ConnString())
+		log.Printf(configDb.StringConnection)
 		panic(err)
 	}
 	if errStep := m.Steps(12); errStep != nil{

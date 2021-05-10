@@ -9,7 +9,6 @@ type Users struct {
 	Id       	int64
 	Email    	string `gorm:"unique"`
 	Password 	string
-	Role   	[]*Roles `gorm:"many2many:user_role;"`
 	BaseModel
 }
 
@@ -25,7 +24,7 @@ type UserRepository interface {
 	// First is select the first item where set condition
 	First(context context.Context, conditions string, args ...interface{}) (*Users, error)
 	// Select is list of user which descending ID
-	Select(context context.Context, conditions string, args ...interface{}) ([]*Users, error)
+	Select(context context.Context, conditions string, args ...interface{}) ([]Users, error)
 	// Count all user match with condition
 	Count(ctx context.Context, condition string, args ...interface{}) (int64, error)
 	// Create new user
@@ -34,5 +33,6 @@ type UserRepository interface {
 
 type UserUsecase interface {
 	Login(ctx context.Context, email, password string) (*Users, error)
-	BulkInsert(ctx context.Context, users []Users) error
+	BulkInsert(ctx context.Context, users []*Users) error
+	AssignRole(ctx context.Context, user *Users, roles *Roles) error
 }

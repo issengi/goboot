@@ -4,29 +4,38 @@ import (
 	"context"
 	"errors"
 	"github.com/issengi/goboot/domain"
-	"github.com/issengi/goboot/users/repository"
+	userRoleRepository "github.com/issengi/goboot/user_role/repository"
+	userRepository "github.com/issengi/goboot/users/repository"
 	"golang.org/x/crypto/bcrypt"
 )
 
 type userUsecase struct {
 	userRepository domain.UserRepository
+	userRoleRepository domain.UserRoleRepository
 }
 
-func (u userUsecase) BulkInsert(ctx context.Context, users []domain.Users) error {
+func (u userUsecase) AssignRole(ctx context.Context, user *domain.Users, roles *domain.Roles) error {
+	repo := u.userRoleRepository
+	model := domain.UserRole{RoleId: roles.Id, UserId: user.Id}
+	return repo.Store(ctx, model)
+}
+
+func (u userUsecase) BulkInsert(ctx context.Context, users []*domain.Users) error {
 	for _, user := range users {
-		_, errCreate := u.userRepository.Create(ctx, &user)
+		idInserted, errCreate := u.userRepository.Create(ctx, user)
 		if errCreate!=nil{
 			return errCreate
 		}
+		user.Id = idInserted
 	}
 	return nil
 }
 
 func (u userUsecase) Login(ctx context.Context, email, password string) (*domain.Users, error) {
 	repository := u.userRepository
-	user, errSelect := repository.First(ctx, "email = ?", email)
+	user, errSelect := repository.First(ctx, `email = ?`, email)
 	if errSelect != nil {
-		return nil, errors.New("failed to get record from that identification")
+		return nil, errSelect
 	}
 
 	errorValidatePassword := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
@@ -38,6 +47,7 @@ func (u userUsecase) Login(ctx context.Context, email, password string) (*domain
 }
 
 func NewUserUsecase() domain.UserUsecase {
-	u := repository.NewUserRepository()
-	return &userUsecase{userRepository: u}
+	u := userRepository.NewUserRepository()
+	ur := userRoleRepository.NewUserRoleRepository()
+	return &userUsecase{userRepository: u, userRoleRepository: ur}
 }

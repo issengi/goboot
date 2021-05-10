@@ -4,16 +4,16 @@ import (
 	"fmt"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	"github.com/gin-gonic/gin/binding"
+	//"github.com/gin-gonic/gin/binding"
 	"github.com/issengi/goboot/app/actions"
 	"github.com/issengi/goboot/app/config"
 	"github.com/issengi/goboot/app/middleware"
-	"github.com/issengi/goboot/app/services"
+	//"github.com/issengi/goboot/app/services"
 )
 
-func init() {
-	binding.Validator = new(services.GinDefaultValidator)
-}
+//func init() {
+//	binding.Validator = new(services.GinDefaultValidator)
+//}
 
 func InitRoute() {
 	baseConfig := config.Config

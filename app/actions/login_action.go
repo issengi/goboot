@@ -17,11 +17,10 @@ func LoginAction(c *gin.Context) {
 			"message": errorValidation.Error(),
 		})
 	}
-
 	authRepoository := auth.NewAuthRepository()
 	token, errorSignToken := authRepoository.CreateJWT(c, ruleForm.User, ruleForm.Password)
 	if errorSignToken != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
+		c.JSON(http.StatusInternalServerError, gin.H{
 			"message": errorSignToken.Error(),
 		})
 		return

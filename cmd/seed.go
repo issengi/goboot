@@ -13,7 +13,7 @@ func Seed() {
 	roleRepo := roleRepository.NewRoleRepository()
 	ctx, cancelContext := context.WithCancel(context.Background())
 	defer cancelContext()
-	var roles = []domain.Roles{
+	var roles = []*domain.Roles{
 		{Role: "admin"},
 		{Role: "user"},
 	}
@@ -23,7 +23,7 @@ func Seed() {
 	}
 	passwordAdmin, _ := bcrypt.GenerateFromPassword([]byte("admin"), bcrypt.DefaultCost)
 	passwordUser, _ := bcrypt.GenerateFromPassword([]byte("user"), bcrypt.DefaultCost)
-	var users = []domain.Users{
+	var users = []*domain.Users{
 		{Email: "admin@example.com", Password: string(passwordAdmin)},
 		{Email: "user@example.com", Password: string(passwordUser)},
 	}
@@ -31,5 +31,14 @@ func Seed() {
 	errSeedUser := userUsecase.BulkInsert(ctx, users)
 	if errSeedUser != nil{
 		panic(errSeedUser)
+	}
+	errorAssignAdmin := userUsecase.AssignRole(ctx, users[0], roles[0])
+	if errorAssignAdmin!=nil{
+		panic(errorAssignAdmin)
+	}
+
+	errorAssignUser := userUsecase.AssignRole(ctx, users[1], roles[1])
+	if errorAssignUser != nil{
+		panic(errorAssignUser)
 	}
 }
