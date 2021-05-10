@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/go-pg/pg/v10"
+	"github.com/issengi/goboot/app/services"
 )
 
 var DBEngine *DBConnection
@@ -38,9 +39,9 @@ func init() {
 		PoolSize: 50,
 		MinIdleConns: 20,
 	})
-	//if Config.IsDev() {
-	//	db.AddQueryHook(services.GoPgLogger{})
-	//}
+	if Config.IsDev() {
+		db.AddQueryHook(services.GoPgLogger{})
+	}
 	if db == nil{
 		panic(errors.New("Failed to connect database"))
 	}
