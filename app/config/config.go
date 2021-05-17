@@ -38,6 +38,8 @@ type config struct {
 	CORSAllowOrigins []string
 	CORSMethods      []string
 	CORSHeaders      []string
+
+	RouteConfig		string
 }
 
 func init() {
@@ -88,6 +90,10 @@ func init() {
 	}
 	if os.Getenv("CORS_HEADERS") != "" {
 		Config.CORSHeaders = strings.Split(os.Getenv("CORS_HEADERS"), ",")
+	}
+
+	if os.Getenv("ROUTE_CONFIG_PATH") != "" {
+		Config.RouteConfig = os.Getenv("ROUTE_CONFIG_PATH")
 	}
 }
 

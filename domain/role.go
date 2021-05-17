@@ -2,12 +2,7 @@ package domain
 
 import (
 	"fmt"
-	"github.com/go-pg/pg/v10/orm"
 )
-
-func init(){
-	orm.RegisterTable((*UserRoles)(nil))
-}
 
 type Roles struct {
 	BaseModel

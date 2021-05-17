@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"github.com/issengi/goboot/app/middleware"
 	userRepository "github.com/issengi/goboot/users/actions"
 	//"github.com/gin-gonic/gin/binding"
 	"github.com/issengi/goboot/app/actions"
 	"github.com/issengi/goboot/app/config"
-	"github.com/issengi/goboot/app/middleware"
 	//"github.com/issengi/goboot/app/services"
 )
 
@@ -36,12 +36,11 @@ func InitRoute() {
 		corsConfig.AllowHeaders = baseConfig.CORSHeaders
 	}
 	router.Use(cors.New(corsConfig))
-
+	router.Use(middleware.RbacMiddleware(baseConfig.RouteConfig))
 	router.POST("/login", actions.LoginAction)
 
 	// middleware auth guard
 	//router.Use(middleware.AuthMiddleware)
-	router.Use(middleware.RbacMiddleware("route-config.json"))
 	router.GET("/total-user/:id", userRepository.UsersHandler)
 	_ = router.Run(fmt.Sprintf(":%s", baseConfig.PortServer))
 }
