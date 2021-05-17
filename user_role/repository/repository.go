@@ -1,23 +1,43 @@
 package repository
 
 import (
-	"context"
+	"fmt"
 	"github.com/issengi/goboot/app/config"
 	"github.com/issengi/goboot/domain"
+	rolerepo "github.com/issengi/goboot/roles/repository"
+	usersrepo "github.com/issengi/goboot/users/repository"
 )
 
 type userRoleRepository struct {
 	db *config.DBConnection
+	roleRepository domain.RolesRepository
+	userRepository domain.UserRepository
 }
 
-func (u userRoleRepository) Store(ctx context.Context, userRoleStruct domain.UserRole) error {
-	db := u.db.Conn
-	_, err := db.Exec(ctx,
-		`INSERT INTO user_role(role_id, user_id) VALUES($1, $2)`,
-		userRoleStruct.RoleId, userRoleStruct.UserId)
+func (u userRoleRepository) SelectReturnRole(condition string, args ...interface{}) ([]domain.Roles, error) {
+	subquery := fmt.Sprintf(`SELECT roles_id FROM user_role`)
+	if condition!=`` {
+		subquery = fmt.Sprintf(`%s WHERE %s`, subquery, condition)
+	}
+	return u.roleRepository.Select(fmt.Sprintf(`id IN (%s)`, subquery), args...)
+}
+
+func (u userRoleRepository) SelectReturnUser(condition string, args ...interface{}) ([]domain.Users, error) {
+	subquery := fmt.Sprintf(`SELECT users_id FROM user_role`)
+	if condition!=`` {
+		subquery = fmt.Sprintf(`%s WHERE %s`, subquery, condition)
+	}
+	return u.userRepository.Select(fmt.Sprintf(`id IN (%s)`, subquery), args)
+}
+
+func (u userRoleRepository) Store(userRoleStruct domain.UserRoles) error {
+	db := u.db
+	_, err := db.Exec(`INSERT INTO user_roles(roles_id, users_id) VALUES($1, $2)`, userRoleStruct.RoleId, userRoleStruct.UserId)
 	return err
 }
 
 func NewUserRoleRepository() domain.UserRoleRepository {
-	return &userRoleRepository{db: config.DBEngine}
+	roleRepo := rolerepo.NewRoleRepository()
+	userRepo := usersrepo.NewUserRepository()
+	return &userRoleRepository{db: config.DBEngine, userRepository: userRepo, roleRepository: roleRepo}
 }

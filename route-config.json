@@ -1,0 +1,8 @@
+{
+  "/login": {
+    "GET": ["#unauthenticated"]
+  },
+  "/total-user/:id": {
+    "GET": ["admin"]
+  }
+}

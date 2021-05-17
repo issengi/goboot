@@ -9,6 +9,7 @@ type Users struct {
 	Id       	int64
 	Email    	string `gorm:"unique"`
 	Password 	string
+	Roles 		[]Roles	`pg:"many2many:user_roles"`
 	BaseModel
 }
 
@@ -22,13 +23,13 @@ func (u Users) GetName() string{
 
 type UserRepository interface {
 	// First is select the first item where set condition
-	First(context context.Context, conditions string, args ...interface{}) (*Users, error)
+	First(conditions string, args ...interface{}) (*Users, error)
 	// Select is list of user which descending ID
-	Select(context context.Context, conditions string, args ...interface{}) ([]Users, error)
+	Select(conditions string, args ...interface{}) ([]Users, error)
 	// Count all user match with condition
-	Count(ctx context.Context, condition string, args ...interface{}) (int64, error)
+	Count(condition string, args ...interface{}) (int64, error)
 	// Create new user
-	Create(ctx context.Context, user *Users) (int64, error)
+	Create(user *Users) (int64, error)
 }
 
 type UserUsecase interface {

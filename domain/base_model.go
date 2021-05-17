@@ -4,6 +4,7 @@ import (
 	//"context"
 	"database/sql"
 	"fmt"
+	"github.com/issengi/goboot/app/config"
 	"time"
 )
 
@@ -18,15 +19,13 @@ type BaseModelInterface interface {
 }
 
 func (b BaseModel)TotalRow(i BaseModelInterface, condition string, args ...interface{}) (int64, error) {
-	//db := config.DBEngine.Conn
-	var result int64
+	db := config.DBEngine
 	var errorQuery error
-	queryString := fmt.Sprintf("SELECT COUNT(*) AS total_row FROM %s", i.GetName())
+	var result int64
+	query := fmt.Sprintf(`SELECT COUNT(*) FROM %s`, i.GetName())
 	if condition != "" {
-		queryString += fmt.Sprintf(" WHERE %s", condition)
-		//errorQuery = db.QueryRow(context.Background(), queryString, args...).Scan(&result)
-	}else{
-		//errorQuery = db.QueryRow(context.Background(), queryString, args...).Scan(&result)
+		query = fmt.Sprintf(`%s WHERE %s`, query, condition)
 	}
+	errorQuery = db.QueryRow(query, args...).Scan(&result)
 	return result, errorQuery
 }

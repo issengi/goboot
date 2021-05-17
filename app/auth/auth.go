@@ -5,9 +5,17 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	"github.com/google/uuid"
 	"github.com/issengi/goboot/app/config"
+	userRoleRepository "github.com/issengi/goboot/user_role/repository"
 	"github.com/issengi/goboot/users/usecase"
 	"time"
 )
+
+type ClaimersObject struct {
+	UserId   	int64 		`json:"user_id"`
+	Remember 	bool 		`json:"remember"`
+	Role		[]string 	`json:"role"`
+	jwt.StandardClaims
+}
 
 type Usecase interface {
 	//Login(email, password string) (*domain.Users, error)
@@ -20,16 +28,20 @@ type authRepository struct {
 
 func (a authRepository) CreateJWT(ctx context.Context, email, password string) (string, error) {
 	userUsecase := usecase.NewUserUsecase()
+	userRole := userRoleRepository.NewUserRoleRepository()
 	user, errorFindUser := userUsecase.Login(ctx, email, password)
 	if errorFindUser != nil {
 		return "", errorFindUser
 	}
-
-	claimers := struct {
-		UserId   int64
-		Remember bool
-		jwt.StandardClaims
-	}{
+	roles, errFindRole := userRole.SelectReturnRole(`users_id = $1`, user.Id)
+	if errFindRole!=nil{
+		return "", errFindRole
+	}
+	var listRole []string
+	for _, role := range roles {
+		listRole = append(listRole, role.Role)
+	}
+	claimers := ClaimersObject{
 		UserId:   user.Id,
 		Remember: true,
 		StandardClaims: jwt.StandardClaims{
@@ -37,6 +49,7 @@ func (a authRepository) CreateJWT(ctx context.Context, email, password string) (
 			Id:        uuid.NewString(),
 			Issuer:    config.Config.AppName,
 		},
+		Role: listRole,
 	}
 	sign := jwt.NewWithClaims(
 		jwt.SigningMethodHS256,
@@ -48,7 +61,6 @@ func (a authRepository) CreateJWT(ctx context.Context, email, password string) (
 	}
 
 	return token, nil
-
 }
 
 func NewAuthRepository() Usecase {

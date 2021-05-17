@@ -16,13 +16,13 @@ type userUsecase struct {
 
 func (u userUsecase) AssignRole(ctx context.Context, user *domain.Users, roles *domain.Roles) error {
 	repo := u.userRoleRepository
-	model := domain.UserRole{RoleId: roles.Id, UserId: user.Id}
-	return repo.Store(ctx, model)
+	model := domain.UserRoles{RoleId: roles.Id, UserId: user.Id}
+	return repo.Store(model)
 }
 
 func (u userUsecase) BulkInsert(ctx context.Context, users []*domain.Users) error {
 	for _, user := range users {
-		idInserted, errCreate := u.userRepository.Create(ctx, user)
+		idInserted, errCreate := u.userRepository.Create(user)
 		if errCreate!=nil{
 			return errCreate
 		}
@@ -33,7 +33,7 @@ func (u userUsecase) BulkInsert(ctx context.Context, users []*domain.Users) erro
 
 func (u userUsecase) Login(ctx context.Context, email, password string) (*domain.Users, error) {
 	repository := u.userRepository
-	user, errSelect := repository.First(ctx, `email = ?`, email)
+	user, errSelect := repository.First( `email = $1`, email)
 	if errSelect != nil {
 		return nil, errSelect
 	}

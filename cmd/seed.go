@@ -17,7 +17,7 @@ func Seed() {
 		{Role: "admin"},
 		{Role: "user"},
 	}
-	errSeedRole := roleRepo.BulkInsert(ctx, roles)
+	errSeedRole := roleRepo.BulkInsert(roles)
 	if errSeedRole != nil{
 		panic(errSeedRole)
 	}

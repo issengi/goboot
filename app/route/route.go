@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	userRepository "github.com/issengi/goboot/users/actions"
 	//"github.com/gin-gonic/gin/binding"
 	"github.com/issengi/goboot/app/actions"
 	"github.com/issengi/goboot/app/config"
@@ -39,6 +40,8 @@ func InitRoute() {
 	router.POST("/login", actions.LoginAction)
 
 	// middleware auth guard
-	router.Use(middleware.AuthMiddleware)
+	//router.Use(middleware.AuthMiddleware)
+	router.Use(middleware.RbacMiddleware("route-config.json"))
+	router.GET("/total-user/:id", userRepository.UsersHandler)
 	_ = router.Run(fmt.Sprintf(":%s", baseConfig.PortServer))
 }
