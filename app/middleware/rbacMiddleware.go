@@ -6,29 +6,22 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/issengi/goboot/app/config"
 	"github.com/issengi/goboot/app/services"
+	"github.com/pelletier/go-toml"
+	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"net/http"
 	"os"
+	"path/filepath"
 	"strings"
 )
 
 func RbacMiddleware(pathConfig string) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		// open file json
-		jsonFile, err := os.Open(pathConfig)
-		defer jsonFile.Close()
-		if services.ResponseError(err, http.StatusInternalServerError, c) {
+		mapConfig, errScan := loadFile(pathConfig)
+		if services.ResponseError(errScan, http.StatusInternalServerError, c) {
 			return
 		}
-
-		// read json file parse to interface
-		byteValue, _ := ioutil.ReadAll(jsonFile)
-		jsonMap := make(map[string]interface{})
-		err = json.Unmarshal(byteValue, &jsonMap)
-		if services.ResponseError(err, http.StatusInternalServerError, c) {
-			return
-		}
-		if statusCode, message := ValidateRoute(jsonMap, c); statusCode == 200 {
+		if statusCode, message := validateRoute(mapConfig, c); statusCode == 200 {
 			c.Next()
 		} else {
 			services.ResponseError(errors.New(message), statusCode, c)
@@ -37,7 +30,32 @@ func RbacMiddleware(pathConfig string) gin.HandlerFunc {
 	}
 }
 
-func ValidateRoute(list map[string]interface{}, c *gin.Context)(statusCode int, message string){
+func loadFile(path string) (map[string]interface{}, error) {
+	jsonMap := make(map[string]interface{})
+	extension := filepath.Ext(path)
+	var errScan error
+	// open file json
+	byteFile, errOpen := os.Open(path)
+	if errOpen!=nil{
+		return nil, errOpen
+	}
+	defer byteFile.Close()
+	// read json file parse to interface
+	byteValue, _ := ioutil.ReadAll(byteFile)
+
+	switch extension {
+	case ".json":
+		errScan = json.Unmarshal(byteValue, &jsonMap)
+	case ".toml":
+		errScan = toml.Unmarshal(byteValue, &jsonMap)
+	case ".yml", ".yaml":
+		errScan = yaml.Unmarshal(byteValue, &jsonMap)
+	}
+
+	return jsonMap, errScan
+}
+
+func validateRoute(list map[string]interface{}, c *gin.Context)(statusCode int, message string){
 	path := c.FullPath()
 	method := c.Request.Method
 	routeConfigInterface := services.FindMapInterfaceByKey(list, path)
