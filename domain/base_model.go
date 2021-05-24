@@ -9,9 +9,9 @@ import (
 )
 
 type BaseModel struct {
-	CreatedAt	time.Time
-	UpdatedAt	time.Time
-	DeletedAt 	sql.NullTime
+	CreatedAt	time.Time		`db:"created_at"`
+	UpdatedAt	time.Time		`db:"updated_at"`
+	DeletedAt 	sql.NullTime	`db:"deleted_at"`
 }
 
 type BaseModelInterface interface {
@@ -26,6 +26,6 @@ func (b BaseModel)TotalRow(i BaseModelInterface, condition string, args ...inter
 	if condition != "" {
 		query = fmt.Sprintf(`%s WHERE %s`, query, condition)
 	}
-	errorQuery = db.QueryRow(query, args...).Scan(&result)
+	errorQuery = db.Conn.Select(&result, query, args...)
 	return result, errorQuery
 }

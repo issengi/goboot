@@ -31,8 +31,10 @@ func (u userRoleRepository) SelectReturnUser(condition string, args ...interface
 }
 
 func (u userRoleRepository) Store(userRoleStruct domain.UserRoles) error {
-	db := u.db
-	_, err := db.Exec(`INSERT INTO user_roles(roles_id, users_id) VALUES($1, $2)`, userRoleStruct.RoleId, userRoleStruct.UserId)
+	_, err := u.db.Conn.NamedExec(`INSERT INTO user_roles(roles_id, users_id) VALUES(:roleid, :userid)`, map[string]interface{}{
+		"roleid": userRoleStruct.RoleId,
+		"userid": userRoleStruct.UserId,
+	})
 	return err
 }
 

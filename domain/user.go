@@ -6,10 +6,10 @@ import (
 )
 
 type Users struct {
-	Id       	int64
-	Email    	string `gorm:"unique"`
-	Password 	string
-	Roles 		[]Roles	`pg:"many2many:user_roles"`
+	Id       	int64		`db:"id"`
+	Email    	string 		`db:"email"`
+	Password 	string		`db:"password"`
+	Roles 		[]Roles
 	BaseModel
 }
 

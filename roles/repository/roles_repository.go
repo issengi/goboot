@@ -15,7 +15,10 @@ func (r repository) Select(where string, args ...interface{}) ([]domain.Roles, e
 	if where != `` {
 		query = fmt.Sprintf(`%s WHERE %s`, query, where)
 	}
-	rows, err := r.connection.Query(query, args...)
+
+	rows, err := r.connection.Conn.Queryx(query, args...)
+	defer rows.Close()
+
 	if err!=nil{
 		return nil, err
 	}
@@ -43,9 +46,9 @@ func (r repository) BulkInsert(roles []*domain.Roles) error {
 }
 
 func (r repository) Store(roles *domain.Roles) (int64, error) {
-	var result int64
-	err := r.connection.QueryRow(`INSERT INTO roles(role_name) VALUES($1) RETURNING id`, roles.Role).Scan(&result)
-	return result, err
+	return r.connection.InsertReturnId(`INSERT INTO roles(role_name) VALUES(:role) RETURNING id`, map[string]interface{}{
+		"role": roles.Role,
+	})
 }
 
 func NewRoleRepository() domain.RolesRepository {
